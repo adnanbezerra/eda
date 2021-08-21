@@ -56,44 +56,116 @@ class Fila {
     }
 
     public void add(int entrada) {
-        size++;
+
+        this.size++;
+        Node novo = new Node(entrada);
+
+        if(this.isEmpty()){
+            this.head = novo;
+            this.tail = novo;
+        } else {
+            recursiveAddLast(this.head, novo);
+        }
+    }
+
+    private void recursiveAddLast(Node current, Node novo) {
+
+        if(current.next == null) {
+            current.next = novo;
+            novo.prev = current;
+        }
+
+        else recursiveAddLast(current.next, novo);
+
+    }
+
+    private boolean isEmpty() {
+        return (this.head == null);
     }
 
     public int search(int entrada) {
-        int contador = 0;
         Node aux = this.head;
+        Node busca = new Node(entrada);
 
-        if(this.buscador(entrada, aux)) return contador;
+        int contador = 0;
 
-        return -1;
+        return this.buscaRecursiva(aux, busca, contador);
+
     }
 
-    private boolean buscador(int entrada, Node aux){
-        if(aux.next == null) return false;
+    private int buscaRecursiva(Node aux, Node compara, int contador){
+
+        // eu notei que, se a lista estiver vazia, ocorre um NullPointerException na busca...
+        // conheço bem a malemolência dos testes do tst, conheço bem demais.
+        if(aux == null) return -1;
+
+        boolean compare = (aux.elemento.getConteudo() == compara.elemento.getConteudo());
+
+        if(compare) return contador;
+        if(aux.next == null && !compare) return -1;
+
+        contador++;
+        return buscaRecursiva(aux.next, compara, contador);
     }
 
     public int head() {
-        return head.elemento;
+        return head.elemento.getConteudo();
     }
 
     public boolean pop() {
+        if(this.isEmpty()) return false;
+
+        if(this.head.next == null){
+            this.head = null;
+            this.tail = null;
+        } else {
+            this.head = this.head.next;
+            this.head.prev = null;
+        }
+ 
         size--;
-        return false;
+        return true;
     }
 
     @Override
     public String toString(){
-        return "e true man";
+        String resultado = "";
+        Node aux = this.head;
+        resultado = toStringRecursivo(resultado, aux);
+        
+        return resultado;
+    }
+
+    private String toStringRecursivo(String string, Node node) {
+        string += node.elemento.getConteudo() + " ";
+
+        if(node.next == null) return string;
+
+        return toStringRecursivo(string, node.next);
     }
 }
 
 class Node {
 
-    public int elemento;
-    public int next;
-    public int prev;
+    public Elemento elemento;
+    public Node next;
+    public Node prev;
 
     public Node(int entrada){
-        this.elemento = entrada;
+        this.elemento = new Elemento(entrada);
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+class Elemento {
+    private int conteudo;
+
+    public Elemento(int entrada){
+        this.conteudo = entrada;
+    }
+
+    public int getConteudo() {
+        return conteudo;
     }
 }
