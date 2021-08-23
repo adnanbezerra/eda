@@ -131,15 +131,23 @@ class Fila {
     public String toString(){
         String resultado = "";
         Node aux = this.head;
+
+        if(aux == null) return "empty";
+
         resultado = toStringRecursivo(resultado, aux);
         
         return resultado;
     }
 
     private String toStringRecursivo(String string, Node node) {
-        string += node.elemento.getConteudo() + " ";
 
-        if(node.next == null) return string;
+        if(node.next == null) {
+            string += node.elemento.getConteudo();
+            return string;
+        } else {
+            string += node.elemento.getConteudo() + " ";
+
+        }
 
         return toStringRecursivo(string, node.next);
     }
