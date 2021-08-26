@@ -1,5 +1,3 @@
-package Predecessor;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -59,46 +57,49 @@ class BST {
     }
 
     public ArrayList<Integer> predecessor(int entry) {
-        Node node = this.recursiveSearch(entry);
+        Node node = this.search(entry);
+        Node aux = node;
 
         ArrayList<Integer> saida = new ArrayList<>();
 
-        if (node.left != null)
-            return max(node.left, saida);
+        if (aux.left != null){
+            saida.add(aux.value);
+            aux = node.left;
+
+            while(aux.right != null){
+                saida.add(aux.value); 
+                aux = aux.right; 
+            }
+            saida.add(aux.value);
+            return saida;
+        }
 
         else {
-            Node aux = node.parent;
+            saida.add(aux.value);
+            aux = node.parent;
             
-            while (aux != null && aux.value > node.value)
-                aux = aux.parent;
-                if(aux != null)
+            while (aux != null && aux.value > node.value){
                 saida.add(aux.value);
-            
+                aux = aux.parent;
+            }
+
+            saida.add(aux.value);
             return saida;
         }
     }
 
-    public ArrayList<Integer> max(Node first, ArrayList<Integer> array) {
-           
-        Node node = first;
+    public Node search(int element) {
         
-        while(node.right != null)
-            array.add(node.value); 
-            node = node.right; 
-   
-        return array;
+        Node aux = this.root;
+            
+        while (aux != null) {   
+            if (aux.value == element) return aux;
+            if (element < aux.value) aux = aux.left;
+            if (element > aux.value) aux = aux.right;
+        }
+            
+        return null;
     
-    }
-
-    public Node recursiveSearch(int element) {
-        return recursiveSearch(this.root, element);
-    }
-        
-    private Node recursiveSearch(Node node, int element) {
-        if (node == null) return null;
-        if (element == node.value) return node;
-        if (element < node.value) return recursiveSearch(node.left, element);
-        else return recursiveSearch(node.right, element);
     }
 }
 
