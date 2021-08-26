@@ -59,11 +59,10 @@ class BST {
     }
 
     public ArrayList<Integer> predecessor(int entry) {
-        Node node = new Node(entry);
+        Node node = this.recursiveSearch(entry);
+
         ArrayList<Integer> saida = new ArrayList<>();
 
-        if (node == null) return null;
-        
         if (node.left != null)
             return max(node.left, saida);
 
@@ -81,13 +80,25 @@ class BST {
 
     public ArrayList<Integer> max(Node first, ArrayList<Integer> array) {
            
-        Node node = this.root;
+        Node node = first;
+        
         while(node.right != null)
+            array.add(node.value); 
             node = node.right; 
-            array.add(node.value);    
-    
+   
         return array;
     
+    }
+
+    public Node recursiveSearch(int element) {
+        return recursiveSearch(this.root, element);
+    }
+        
+    private Node recursiveSearch(Node node, int element) {
+        if (node == null) return null;
+        if (element == node.value) return node;
+        if (element < node.value) return recursiveSearch(node.left, element);
+        else return recursiveSearch(node.right, element);
     }
 }
 
